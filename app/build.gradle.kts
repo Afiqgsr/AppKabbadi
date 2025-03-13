@@ -33,11 +33,16 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    buildFeatures{
+        dataBinding = true
+    }
 }
 
 dependencies {
 
     implementation(libs.androidx.core.ktx)
+    //implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
+    //implementation("androidx.activity:activity-ktx:1.10.1")
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)

@@ -1,68 +1,52 @@
 package com.example.minggu_3
 
 import android.os.Bundle
-import android.widget.Button
-import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.databinding.DataBindingUtil
+import com.example.minggu_3.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-    // Menggunakan ScoreViewModel
     private val scoreViewModel: ScoreViewModel by viewModels()
-
-    private lateinit var tvScoreA: TextView
-    private lateinit var tvScoreB: TextView
-    private lateinit var btnPlus1A: Button
-    private lateinit var btnPlus2A: Button
-    private lateinit var btnPlus1B: Button
-    private lateinit var btnPlus2B: Button
-    private lateinit var btnReset: Button
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        // Inisialisasi UI
-        tvScoreA = findViewById(R.id.tv_score_a)
-        tvScoreB = findViewById(R.id.tv_score_b)
-        btnPlus1A = findViewById(R.id.btn_plus1_a)
-        btnPlus2A = findViewById(R.id.btn_plus2_a)
-        btnPlus1B = findViewById(R.id.btn_plus1_b)
-        btnPlus2B = findViewById(R.id.btn_plus2_b)
-        btnReset = findViewById(R.id.btn_reset)
-
-        // Menampilkan skor terakhir saat Activity dibuat ulang
-        updateScores()
-
-        // Event Listener untuk tombol Team A
-        btnPlus1A.setOnClickListener {
-            scoreViewModel.incrementScoreA()
-            updateScores()
+        // Mengamati perubahan skor dengan LiveData
+        scoreViewModel.scoreA.observe(this) { newScoreA ->
+            binding.tvScoreA.text = newScoreA.toString()
         }
 
-        btnPlus2A.setOnClickListener {
+        scoreViewModel.scoreB.observe(this) { newScoreB ->
+            binding.tvScoreB.text = newScoreB.toString()
+        }
+
+        // Event Listener untuk tombol Team A
+        binding.btnPlus1A.setOnClickListener {
+            scoreViewModel.incrementScoreA()
+        }
+
+        binding.btnPlus2A.setOnClickListener {
             repeat(2) { scoreViewModel.incrementScoreA() }
-            updateScores()
         }
 
         // Event Listener untuk tombol Team B
-        btnPlus1B.setOnClickListener {
+        binding.btnPlus1B.setOnClickListener {
             scoreViewModel.incrementScoreB()
-            updateScores()
         }
 
-        btnPlus2B.setOnClickListener {
+        binding.btnPlus2B.setOnClickListener {
             repeat(2) { scoreViewModel.incrementScoreB() }
-            updateScores()
         }
 
         // Tombol Reset
-        btnReset.setOnClickListener {
+        binding.btnReset.setOnClickListener {
             scoreViewModel.resetScore()
-            updateScores()
         }
 
         // Mengatur padding sesuai dengan insets sistem (opsional)
@@ -71,11 +55,5 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-    }
-
-    // Fungsi untuk memperbarui tampilan skor Kabaddi
-    private fun updateScores() {
-        tvScoreA.text = scoreViewModel.scoreA.toString()
-        tvScoreB.text = scoreViewModel.scoreB.toString()
     }
 }
