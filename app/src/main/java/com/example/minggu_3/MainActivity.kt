@@ -17,13 +17,23 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        // Mengamati perubahan skor dengan LiveData
+        // Observasi skor Tim A
         scoreViewModel.scoreA.observe(this) { newScoreA ->
             binding.tvScoreA.text = newScoreA.toString()
         }
 
+        // Observasi skor Tim B
         scoreViewModel.scoreB.observe(this) { newScoreB ->
             binding.tvScoreB.text = newScoreB.toString()
+        }
+
+        // Observasi status pemenang
+        scoreViewModel.winner.observe(this) { winnerText ->
+            if (winnerText != null) {
+                binding.tvWinner.text = winnerText // Menampilkan teks pemenang
+            } else {
+                binding.tvWinner.text = "" // Menghapus teks jika permainan di-reset
+            }
         }
 
         // Event Listener untuk tombol Team A
